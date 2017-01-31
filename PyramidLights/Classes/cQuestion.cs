@@ -21,9 +21,11 @@ public class cQuestion
     public DateTime startDate;
     public int startHour;
     public int startMinutes;
+    public DateTime startDateTime;
     public DateTime endDate;
     public int endHour;
     public int endMinutes;
+    public DateTime endDateTime;
     public string questionText = null;
     public string answer1 = null;
     public string answer2 = null;
@@ -93,8 +95,8 @@ public class cQuestion
                     endDate = DateTime.Parse((string)row[3]);
                     endHour = Convert.ToInt32(row[4]);
                     endMinutes = Convert.ToInt32(row[5]);
-                    DateTime startDateTime = new DateTime(startDate.Year, startDate.Month, startDate.Day, startHour, startMinutes, 0);
-                    DateTime endDateTime = new DateTime(endDate.Year, endDate.Month, endDate.Day, endHour, endMinutes,0);
+                    startDateTime = new DateTime(startDate.Year, startDate.Month, startDate.Day, startHour, startMinutes, 0);
+                    endDateTime = new DateTime(endDate.Year, endDate.Month, endDate.Day, endHour, endMinutes,0);
                     if (DateTime.Now > startDateTime && DateTime.Now <= endDateTime)
                     {
                         breakLoop = true;

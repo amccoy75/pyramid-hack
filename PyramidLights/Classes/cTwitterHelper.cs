@@ -31,7 +31,7 @@ public class cTwitterHelper
         // An action to consume the ConcurrentQueue.
         Action processQueue = () =>
         {
-            while (true)
+            while (DateTime.Now <= vQuestion.endDateTime)
             {
                 cTweet tempAnswer = correctAnswers.Take();
                 System.Diagnostics.Debug.WriteLine("Evaluating TweetID: " + tempAnswer.getID().ToString());
