@@ -48,5 +48,9 @@ public class cConfigurationHelper
     {
         return data["pyramidScript"];
     }
+    public string eMail()
+    {
+        return data["eMail"];
+    }
 };
 
