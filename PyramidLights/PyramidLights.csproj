@@ -165,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\cConfigurationHelper.cs" />
+    <Compile Include="Classes\cMail.cs" />
     <Compile Include="Classes\cQuestion.cs" />
     <Compile Include="Classes\cTriggerPyramid.cs" />
     <Compile Include="Classes\cTweet.cs" />
