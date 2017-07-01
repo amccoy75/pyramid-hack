@@ -79,16 +79,24 @@ public class cTwitterHelper
                         //trigger pyramid
                         System.Diagnostics.Debug.WriteLine("Triggering Pyramid");
 
-                        cTriggerPyramid triggerPyramidOBJ = new cTriggerPyramid();
+                        try
+                        {
+                            cTriggerPyramid triggerPyramidOBJ = new cTriggerPyramid();
 
-                        //for local execution
-                        //triggerPyramidOBJ.runPython_cmd("pi@192.168.0.168", "python activatetrigger.py " + vQuestion.pyramidScene);
-                        //for server execution    
-                        //triggerPyramidOBJ.runPython_cmd("-i /var/pi/pi_privatekey pi@localhost -p 19999 nohup", "python activatetrigger.py " + vQuestion.pyramidScene);
-                        //pulling from config file
+                            //for local execution
+                            //triggerPyramidOBJ.runPython_cmd("pi@192.168.0.168", "python activatetrigger.py " + vQuestion.pyramidScene);
+                            //for server execution    
+                            //triggerPyramidOBJ.runPython_cmd("-i /var/pi/pi_privatekey pi@localhost -p 19999 nohup", "python activatetrigger.py " + vQuestion.pyramidScene);
+                            //pulling from config file
 
-                        triggerPyramidOBJ.runPython_cmd(configHelper.pyramidTrigger(), configHelper.pyramidScript() + " " + vQuestion.pyramidScene);
-                    }
+                            triggerPyramidOBJ.runPython_cmd(configHelper.pyramidTrigger(), configHelper.pyramidScript() + " " + vQuestion.pyramidScene);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Pyramid could not be triggered. " + ex.Message);
+                        }
+
+                        }
                     else
                     {
                         String incorrectResponse = null;
