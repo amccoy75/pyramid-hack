@@ -26,12 +26,12 @@ using System.Threading;
             {
                 //tweet question
                 TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
-
-                long questionTweetID = twitterHelper.sendTweet(question.questionText + " " + myTI.ToTitleCase(question.answer1) +
-                                                                    ", " + question.answer2 + ", " + question.answer3 +
-                                                                    ", or " + question.answer4 + "?" + " " + DateTime.Now.ToString());
-                //listen for responses 
-                twitterHelper.listenAndProcess(questionTweetID, question);
+                if (!question.tweetTooLong())
+                {
+                    long questionTweetID = twitterHelper.sendTweet(question.tweetString + DateTime.Now.ToString());
+                    //listen for responses 
+                    twitterHelper.listenAndProcess(questionTweetID, question);
+                }
             }
     }
   

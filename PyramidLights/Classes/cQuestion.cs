@@ -34,6 +34,7 @@ public class cQuestion
     public int correctAnswer = -1;
     public string followUpMessage = null;
     public string pyramidScene = null;
+    public string tweetString = null;
     private cConfigurationHelper configHelper = null;
            
     public cQuestion(cConfigurationHelper vConfigHelper)
@@ -41,6 +42,10 @@ public class cQuestion
         configHelper = vConfigHelper;
     }
 
+    public bool tweetTooLong()
+    {
+        return (tweetString.ToUpper() == "TOO LONG");
+    }
     public void getQuestion()
     {
         // Create Google Sheets API service.
@@ -52,7 +57,7 @@ public class cQuestion
         });
 
         //https://docs.google.com/spreadsheets/d/1hpj2qvhHXj1QRcjlU34urkKeXGvltHfjCgJ1tsk9AB0/edit#gid=0
-        String range = "Sheet1!A1:N";
+        String range = "Sheet1!A1:O";
 
         SpreadsheetsResource.ValuesResource.GetRequest request =
                 service.Spreadsheets.Values.Get(configHelper.spreadsheetID(), range);
@@ -108,6 +113,7 @@ public class cQuestion
                         //public string correctAnswer = null;
                         //public string followUpMessage = null;
                         //public string pyramidScene = null;
+                         //public string tweetString = null;
                         questionText = Convert.ToString(row[6]);
                         answer1 = Convert.ToString(row[7]);
                         answer2 = Convert.ToString(row[8]);
@@ -122,7 +128,9 @@ public class cQuestion
                         catch (System.ArgumentOutOfRangeException ex)
                         {
                             pyramidScene = "scene10";
+                            Console.WriteLine(ex.Message);
                         }
+                        tweetString = Convert.ToString(row[14]);
                     }
                 }
             }
@@ -135,7 +143,7 @@ public class cQuestion
 
     private void setQuestionValues(DateTime vStartDate, int vStartHour, int vStartMinutes, DateTime vEndDate, int vEndHour,
                                     int vEndMinutes, String vQuestionText, String vAnswer1, String vAnswer2, String vAnswer3, 
-                                    String vAnswer4, Int32 vCorrectAnswer, String vFollowUpMessage, String vPyramidScene)
+                                    String vAnswer4, Int32 vCorrectAnswer, String vFollowUpMessage, String vPyramidScene, String vTweetString)
     {
         startDate = vStartDate;
         startHour = vStartHour;
@@ -160,7 +168,7 @@ public class cQuestion
         {
             pyramidScene = "scene10";
         }
-        
+        tweetString = vTweetString;
 }
 }
 

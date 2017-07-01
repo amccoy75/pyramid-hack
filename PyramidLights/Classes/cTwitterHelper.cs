@@ -16,6 +16,12 @@ public class cTwitterHelper
     public long sendTweet(String vText)
     {
         Tweetinvi.Auth.SetUserCredentials(configHelper.consumerKey(), configHelper.consumerSecret(), configHelper.accessToken(), configHelper.accessTokenSecret());
+        if (Tweetinvi.Auth.Credentials == null)
+        {
+            var lastException = Tweetinvi.ExceptionHandler.GetLastException();
+
+
+        }
 
         var publishedTweet = Tweetinvi.Tweet.PublishTweet(vText);
         if (publishedTweet == null)
@@ -73,12 +79,15 @@ public class cTwitterHelper
                         System.Diagnostics.Debug.WriteLine("Response Sent: " + correctResponse);
                         //trigger pyramid
                         System.Diagnostics.Debug.WriteLine("Triggering Pyramid");
+
                         cTriggerPyramid triggerPyramidOBJ = new cTriggerPyramid();
+
                         //for local execution
                         //triggerPyramidOBJ.runPython_cmd("pi@192.168.0.168", "python activatetrigger.py " + vQuestion.pyramidScene);
                         //for server execution    
                         //triggerPyramidOBJ.runPython_cmd("-i /var/pi/pi_privatekey pi@localhost -p 19999 nohup", "python activatetrigger.py " + vQuestion.pyramidScene);
                         //pulling from config file
+
                         triggerPyramidOBJ.runPython_cmd(configHelper.pyramidTrigger(), configHelper.pyramidScript() + " " + vQuestion.pyramidScene);
                     }
                     else
