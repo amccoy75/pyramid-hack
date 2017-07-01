@@ -18,6 +18,11 @@ public class cTwitterHelper
         Tweetinvi.Auth.SetUserCredentials(configHelper.consumerKey(), configHelper.consumerSecret(), configHelper.accessToken(), configHelper.accessTokenSecret());
 
         var publishedTweet = Tweetinvi.Tweet.PublishTweet(vText);
+        if (publishedTweet == null)
+        {
+            var lastException = Tweetinvi.ExceptionHandler.GetLastException();
+            // TODO: do something when this happens
+        }
         var tweetId = publishedTweet.Id;
         System.Diagnostics.Debug.WriteLine("Tweet published with ID: " + tweetId.ToString());
 
