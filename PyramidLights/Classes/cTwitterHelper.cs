@@ -73,8 +73,7 @@ public class cTwitterHelper
                     if (tempAnswer.getText().ToUpper().Contains(correctAnswerString.ToUpper()))
                     {
                         String correctResponse = null;
-                        correctResponse = "@" + tempAnswer.getUserAccount() + " That's Correct! " +
-                                                                vQuestion.followUpMessage;
+                        correctResponse = "@" + tempAnswer.getUserAccount() + " " + vQuestion.correctResponseTweetString;
                         Tweetinvi.Tweet.PublishTweetInReplyTo(correctResponse, answerTweetID);
                         System.Diagnostics.Debug.WriteLine("Response Sent: " + correctResponse);
                         //trigger pyramid
@@ -93,7 +92,7 @@ public class cTwitterHelper
                     else
                     {
                         String incorrectResponse = null;
-                        incorrectResponse = "@" + tempAnswer.getUserAccount() + " Oops, that's not it. Try again!";
+                        incorrectResponse = "@" + tempAnswer.getUserAccount() + " " + vQuestion.incorrectResponseTweetString;
                         Tweetinvi.Tweet.PublishTweetInReplyTo(incorrectResponse , answerTweetID);
                         System.Diagnostics.Debug.WriteLine("Response Sent: " + incorrectResponse);
                     }
