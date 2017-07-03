@@ -50,12 +50,15 @@ using System.Threading.Tasks;
                         }
 
                     }
-                    dtResetDay = DateTime.Now;
+                    //dtResetDay = DateTime.Now;
 
-                    if (dtStartToday.AddDays(1) > dtResetDay && dtStartToday.Day != dtResetDay.Day)
-                    {
+                    //if (dtStartToday.AddDays(1) > dtResetDay && dtStartToday.Day != dtResetDay.Day)
+                    //{
+                    //    break;
+                    //}
+
+                    if (question.endDateTime < DateTime.Now)
                         break;
-                    }
                 }
 
             }
