@@ -52,12 +52,11 @@ using System.Diagnostics;
                         {
                             //tweet question
                             TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+                            long questionTweetID = twitterHelper.sendTweet(question.tweetString + " " + DateTime.Now.ToString());
+                            //long questionTweetID = twitterHelper.sendTweet(question.tweetString);
 
                             if (!question.tweetTooLong())
                             {
-                                //long questionTweetID = twitterHelper.sendTweet(question.tweetString + " " + DateTime.Now.ToString());
-                                long questionTweetID = twitterHelper.sendTweet(question.tweetString);
-
                                 //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
                                 //listen for responses 
                                 twitterHelper.listenAndProcess(questionTweetID, question);
@@ -69,6 +68,9 @@ using System.Diagnostics;
                     //{
                     //    break;
                     //}
+
+                    if (question.endDateTime < DateTime.Now)
+                        break;
                 }
                 System.Diagnostics.Debug.WriteLine("End of while loop in PyramidLightsMain. Question Expired. Getting new question.");
 
