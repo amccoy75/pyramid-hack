@@ -3,11 +3,13 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
 
 public class cTwitterHelper
 {
 
     private cConfigurationHelper configHelper = null;
+    private const string EventLogSource = "PyramidLights";
     public cTwitterHelper(cConfigurationHelper vConfigHelper)
     {
         configHelper = vConfigHelper;
@@ -42,6 +44,7 @@ public class cTwitterHelper
         // An action to consume the ConcurrentQueue.
         Action processQueue = () =>
         {
+            System.Diagnostics.Debug.WriteLine("starting question listen");
             while (DateTime.Now <= vQuestion.endDateTime)
             {
                 cTweet tempAnswer = correctAnswers.Take();
@@ -93,10 +96,15 @@ public class cTwitterHelper
                         }
                         catch (Exception ex)
                         {
+                            if (!EventLog.SourceExists(EventLogSource))
+                                EventLog.CreateEventSource(EventLogSource, "Creating log source for Pyramid Lights");
+
                             Console.WriteLine("Pyramid could not be triggered. " + ex.Message);
+                            System.Diagnostics.Debug.WriteLine("Pyramid could not be triggered. " + ex.Message);
+                            System.Diagnostics.EventLog.WriteEntry(EventLogSource, ex.ToString(), System.Diagnostics.EventLogEntryType.Error);
                         }
 
-                        }
+                    }
                     else
                     {
                         String incorrectResponse = null;
@@ -106,10 +114,12 @@ public class cTwitterHelper
                     }
                 }
             }
+            System.Diagnostics.Debug.WriteLine("question expired cTwitterHelper");
         };
 
         // Start 1 concurrent consuming actions.
         Task.Run(processQueue);
+
 
         Tweetinvi.Auth.SetUserCredentials(configHelper.consumerKey(), configHelper.consumerSecret(), configHelper.accessToken(), configHelper.accessTokenSecret());
         var stream = Stream.CreateUserStream();
@@ -128,6 +138,7 @@ public class cTwitterHelper
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
+            System.Diagnostics.EventLog.WriteEntry(EventLogSource, e.ToString(), System.Diagnostics.EventLogEntryType.Error);
         }
 
     }

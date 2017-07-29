@@ -2,15 +2,22 @@
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 
     class PyramidLightsMain
     {
 
+
+    private const string EventLogSource = "PyramidLights";
     static void Main(string[] args)
     {
 
         cConfigurationHelper  configHelper = new cConfigurationHelper();
+
+        if (!EventLog.SourceExists(EventLogSource))
+            EventLog.CreateEventSource(EventLogSource, "Creating log source for Pyramid Lights");
+
 
         try
         {
@@ -22,6 +29,7 @@ using System.Threading.Tasks;
                 cQuestion question = new cQuestion(configHelper);
 
                 //get question from googledocs
+                System.Diagnostics.Debug.WriteLine("Getting question from spreadsheet");
                 question.getQuestion();
 
                 while (true)
@@ -41,7 +49,8 @@ using System.Threading.Tasks;
 
                         if (!question.tweetTooLong())
                         {
-                            long questionTweetID = twitterHelper.sendTweet(question.tweetString + " " + DateTime.Now.ToString());
+                            //long questionTweetID = twitterHelper.sendTweet(question.tweetString + " " + DateTime.Now.ToString());
+                            long questionTweetID = twitterHelper.sendTweet(question.tweetString);
 
                             //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
                             //listen for responses 
@@ -60,21 +69,22 @@ using System.Threading.Tasks;
                     if (question.endDateTime < DateTime.Now)
                         break;
                 }
+                System.Diagnostics.Debug.WriteLine("End of while loop in PyramidLightsMain. Question Expired. Getting new question.");
 
             }
         }
         catch (Exception Ex)
         {
-            System.Diagnostics.EventLog.WriteEntry("PyramidLightsError", Ex.ToString(), System.Diagnostics.EventLogEntryType.Error);
-
-            try
-            {
-                PyramidLights.Classes.cMail.SendEmail(configHelper, Ex.Message);
-            }
-            catch(Exception ignoreEx)
-            {
-                System.Diagnostics.EventLog.WriteEntry("PyramidLightsError-Mail", ignoreEx.ToString(), System.Diagnostics.EventLogEntryType.Error);
-            }
+            System.Diagnostics.EventLog.WriteEntry(EventLogSource, Ex.ToString(), System.Diagnostics.EventLogEntryType.Error);
+           
+            //try
+            //{
+            //    PyramidLights.Classes.cMail.SendEmail(configHelper, Ex.Message);
+            //}
+            //catch(Exception ignoreEx)
+            //{
+            //    System.Diagnostics.EventLog.WriteEntry("PyramidLightsError-Mail", ignoreEx.ToString(), System.Diagnostics.EventLogEntryType.Error);
+            //}
         }
     }
 
