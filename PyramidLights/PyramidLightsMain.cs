@@ -34,40 +34,41 @@ using System.Diagnostics;
 
                 while (true)
                 {
+                    dtResetDay = DateTime.Now;
 
                     if (question.startDateTime > DateTime.Now)
                     {
                         TimeSpan offset;
                         offset = question.startDateTime - DateTime.Now;
                         Thread.Sleep(offset);
-                        question.getQuestion();
+                        //question.getQuestion();
+                        break;
                     }
-                    if (question.questionText != null)
-                    {
-                        //tweet question
-                        TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+                    if (question.endDateTime < DateTime.Now)
+                        break;
 
-                        if (!question.tweetTooLong())
+                    if (DateTime.Now > question.startDateTime && DateTime.Now <= question.endDateTime)
+                        if (question.questionText != null)
                         {
-                            //long questionTweetID = twitterHelper.sendTweet(question.tweetString + " " + DateTime.Now.ToString());
-                            long questionTweetID = twitterHelper.sendTweet(question.tweetString);
+                            //tweet question
+                            TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
 
-                            //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
-                            //listen for responses 
-                            twitterHelper.listenAndProcess(questionTweetID, question);
+                            if (!question.tweetTooLong())
+                            {
+                                //long questionTweetID = twitterHelper.sendTweet(question.tweetString + " " + DateTime.Now.ToString());
+                                long questionTweetID = twitterHelper.sendTweet(question.tweetString);
+
+                                //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
+                                //listen for responses 
+                                twitterHelper.listenAndProcess(questionTweetID, question);
+                            }
 
                         }
-
-                    }
-                    //dtResetDay = DateTime.Now;
 
                     //if (dtStartToday.AddDays(1) > dtResetDay && dtStartToday.Day != dtResetDay.Day)
                     //{
                     //    break;
                     //}
-
-                    if (question.endDateTime < DateTime.Now)
-                        break;
                 }
                 System.Diagnostics.Debug.WriteLine("End of while loop in PyramidLightsMain. Question Expired. Getting new question.");
 
