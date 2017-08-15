@@ -62,15 +62,19 @@ using System.Diagnostics;
                                 twitterHelper.listenAndProcess(questionTweetID, question);
                             }
 
-                        }
+                            if (!question.tweetTooLong())
+                            {
+                                //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
+                                //listen for responses 
+                                twitterHelper.listenAndProcess(questionTweetID, question);
+                            }
 
+                        }
+                    
                     //if (dtStartToday.AddDays(1) > dtResetDay && dtStartToday.Day != dtResetDay.Day)
                     //{
                     //    break;
                     //}
-
-                    if (question.endDateTime < DateTime.Now)
-                        break;
                 }
                 System.Diagnostics.Debug.WriteLine("End of while loop in PyramidLightsMain. Question Expired. Getting new question.");
 
