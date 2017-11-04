@@ -27,13 +27,12 @@ using System.Diagnostics;
                 DateTime dtResetDay = DateTime.Now;
                 cTwitterHelper twitterHelper = new cTwitterHelper(configHelper);
                 cQuestion question = new cQuestion(configHelper);
-                bool resetQuestion = false;
 
                 //get question from googledocs
                 System.Diagnostics.Debug.WriteLine("Getting question from spreadsheet");
                 question.getQuestion();
 
-                while (resetQuestion == false)
+                while (true)
                 {
                     dtResetDay = DateTime.Now;
 
@@ -60,15 +59,8 @@ using System.Diagnostics;
                             {
                                 //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
                                 //listen for responses 
-                                resetQuestion = twitterHelper.listenAndProcess(questionTweetID, question);
-
-                                if (!question.tweetTooLong())
-                                {
-                                    //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
-                                    //listen for responses 
-                                    twitterHelper.listenAndProcess(questionTweetID, question);
-                                }
-
+                                if (twitterHelper.listenAndProcess(questionTweetID, question))
+                                    break;
                             }
 
                             //if (dtStartToday.AddDays(1) > dtResetDay && dtStartToday.Day != dtResetDay.Day)
