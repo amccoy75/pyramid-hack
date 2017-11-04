@@ -62,23 +62,23 @@ using System.Diagnostics;
                                 //listen for responses 
                                 resetQuestion = twitterHelper.listenAndProcess(questionTweetID, question);
 
-                            if (!question.tweetTooLong())
-                            {
-                                //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
-                                //listen for responses 
-                                twitterHelper.listenAndProcess(questionTweetID, question);
+                                if (!question.tweetTooLong())
+                                {
+                                    //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
+                                    //listen for responses 
+                                    twitterHelper.listenAndProcess(questionTweetID, question);
+                                }
+
                             }
 
+                            //if (dtStartToday.AddDays(1) > dtResetDay && dtStartToday.Day != dtResetDay.Day)
+                            //{
+                            //    break;
+                            //}
                         }
-                    
-                    //if (dtStartToday.AddDays(1) > dtResetDay && dtStartToday.Day != dtResetDay.Day)
-                    //{
-                    //    break;
-                    //}
+                    System.Diagnostics.Debug.WriteLine("End of while loop in PyramidLightsMain. Question Expired. Getting new question.");
                 }
-                System.Diagnostics.Debug.WriteLine("End of while loop in PyramidLightsMain. Question Expired. Getting new question.");
             }
-            
         }
         catch (Exception Ex)
         {
