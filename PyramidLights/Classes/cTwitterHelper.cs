@@ -21,8 +21,6 @@ public class cTwitterHelper
         if (Tweetinvi.Auth.Credentials == null)
         {
             var lastException = Tweetinvi.ExceptionHandler.GetLastException();
-
-
         }
 
         var publishedTweet = Tweetinvi.Tweet.PublishTweet(vText);
@@ -37,15 +35,17 @@ public class cTwitterHelper
         return tweetId;
     }
     //Open listening connecting to twitter account
-    public void listenAndProcess(long vQuestionTweetID, cQuestion vQuestion)
+    public bool listenAndProcess(long vQuestionTweetID, cQuestion vQuestion)
     {
+        bool reset = false;
         BlockingCollection<cTweet> correctAnswers = new BlockingCollection<cTweet>(1000);
         cTriggerPyramid triggerPyramid = new cTriggerPyramid();
+        cQuestion question = vQuestion;
         // An action to consume the ConcurrentQueue.
         Action processQueue = () =>
         {
             System.Diagnostics.Debug.WriteLine("starting question listen");
-            while (DateTime.Now <= vQuestion.endDateTime)
+            while (DateTime.Now <= question.endDateTime)
             {
                 cTweet tempAnswer = correctAnswers.Take();
                 System.Diagnostics.Debug.WriteLine("Evaluating TweetID: " + tempAnswer.getID().ToString());
@@ -55,19 +55,19 @@ public class cTwitterHelper
                     long answerTweetID = tempAnswer.getID();
                     //validate answer, send return tweet
                     String correctAnswerString = null;
-                    switch (vQuestion.correctAnswer)
+                    switch (question.correctAnswer)
                     {
                         case 1:
-                            correctAnswerString = vQuestion.answer1;
+                            correctAnswerString = question.answer1;
                             break;
                         case 2:
-                            correctAnswerString = vQuestion.answer2;
+                            correctAnswerString = question.answer2;
                             break;
                         case 3:
-                            correctAnswerString = vQuestion.answer3;
+                            correctAnswerString = question.answer3;
                             break;
                         case 4:
-                            correctAnswerString = vQuestion.answer4;
+                            correctAnswerString = question.answer4;
                             break;
                         default:
                             correctAnswerString = "ERROR";
@@ -76,7 +76,7 @@ public class cTwitterHelper
                     if (tempAnswer.getText().ToUpper().Contains(correctAnswerString.ToUpper()))
                     {
                         String correctResponse = null;
-                        correctResponse = "@" + tempAnswer.getUserAccount() + " " + vQuestion.correctResponseTweetString;
+                        correctResponse = "@" + tempAnswer.getUserAccount() + " " + question.correctResponseTweetString;
                         Tweetinvi.Tweet.PublishTweetInReplyTo(correctResponse, answerTweetID);
                         System.Diagnostics.Debug.WriteLine("Response Sent: " + correctResponse);
                         //trigger pyramid
@@ -108,13 +108,14 @@ public class cTwitterHelper
                     else
                     {
                         String incorrectResponse = null;
-                        incorrectResponse = "@" + tempAnswer.getUserAccount() + " " + vQuestion.incorrectResponseTweetString;
+                        incorrectResponse = "@" + tempAnswer.getUserAccount() + " " + question.incorrectResponseTweetString;
                         Tweetinvi.Tweet.PublishTweetInReplyTo(incorrectResponse , answerTweetID);
                         System.Diagnostics.Debug.WriteLine("Response Sent: " + incorrectResponse);
                     }
                 }
             }
             System.Diagnostics.Debug.WriteLine("question expired cTwitterHelper");
+            reset = true;
         };
 
         // Start 1 concurrent consuming actions.
@@ -140,6 +141,7 @@ public class cTwitterHelper
             Console.WriteLine(e.Message);
             System.Diagnostics.EventLog.WriteEntry(EventLogSource, e.ToString(), System.Diagnostics.EventLogEntryType.Error);
         }
+        return reset;
 
     }
 

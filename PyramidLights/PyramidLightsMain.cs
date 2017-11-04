@@ -18,21 +18,22 @@ using System.Diagnostics;
         if (!EventLog.SourceExists(EventLogSource))
             EventLog.CreateEventSource(EventLogSource, "Creating log source for Pyramid Lights");
 
-
         try
         {
+
             while (true)
             {
                 DateTime dtStartToday = DateTime.Now;
                 DateTime dtResetDay = DateTime.Now;
                 cTwitterHelper twitterHelper = new cTwitterHelper(configHelper);
                 cQuestion question = new cQuestion(configHelper);
+                bool resetQuestion = false;
 
                 //get question from googledocs
                 System.Diagnostics.Debug.WriteLine("Getting question from spreadsheet");
                 question.getQuestion();
 
-                while (true)
+                while (resetQuestion == false)
                 {
                     dtResetDay = DateTime.Now;
 
@@ -59,8 +60,7 @@ using System.Diagnostics;
                             {
                                 //var twitterTask = Task.Run(async () => await cTwitterHelper.ProcessTweet(questionTweetID, question));
                                 //listen for responses 
-                                twitterHelper.listenAndProcess(questionTweetID, question);
-                            }
+                                resetQuestion = twitterHelper.listenAndProcess(questionTweetID, question);
 
                             if (!question.tweetTooLong())
                             {
@@ -77,8 +77,8 @@ using System.Diagnostics;
                     //}
                 }
                 System.Diagnostics.Debug.WriteLine("End of while loop in PyramidLightsMain. Question Expired. Getting new question.");
-
             }
+            
         }
         catch (Exception Ex)
         {
