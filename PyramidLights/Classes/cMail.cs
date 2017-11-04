@@ -10,6 +10,8 @@ namespace PyramidLights.Classes
 {
     public class cMail
     {
+        private const string EventLogSource = "PyramidLights";
+
         public static void SendEmail(cConfigurationHelper pConfigHelper, string pBody)
         {
             SmtpClient clientSMTP = new SmtpClient("smtp.gmail.com", 587);
@@ -39,7 +41,7 @@ namespace PyramidLights.Classes
             }
             catch (Exception ex)
             {
-
+                System.Diagnostics.EventLog.WriteEntry(EventLogSource, ex.ToString(), System.Diagnostics.EventLogEntryType.Error);
             }
             finally
             {

@@ -18,6 +18,8 @@ public class cQuestion
     static string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
     static string ApplicationName = "Google Sheets API Pyramid Lights";
 
+    private const string EventLogSource = "PyramidLights";
+
     public DateTime startDate;
     public int startHour;
     public int startMinutes;
@@ -135,6 +137,7 @@ public class cQuestion
                         {
                             pyramidScene = "scene10";
                             Console.WriteLine(ex.Message);
+                            System.Diagnostics.EventLog.WriteEntry(EventLogSource, ex.ToString(), System.Diagnostics.EventLogEntryType.Error);
                         }
                         questionText = Convert.ToString(row[7]);
                         answer1 = Convert.ToString(row[8]);
